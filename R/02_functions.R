@@ -65,11 +65,12 @@ colorize_wide_tidyr <- function(df, n_colors, key_col = "id") {
       color = colors[idc],
     ) %>%
     filter(!is.na(color)) %>%
-    mutate(alpha = ifelse(label != "id" & .y < 0, 0.6, 1.0)) %>%
+    mutate(alpha = ifelse(.y < 0, 1.0, 0.2)) %>%
+    mutate(.text_color = ifelse(.y < 0, "white", "black")) %>%
     select(-idc)
 }
 
-plot_data <- function(x, title = "") {
+plot_data <- function(x, title = "", title_size = 20) {
   if (!"alpha" %in% colnames(x)) x$alpha <- 1
   if (!".text_color" %in% colnames(x)) x$`.text_color` <- "white"
   if (!".text_size" %in% colnames(x)) x$`.text_size` <- 12
@@ -84,7 +85,7 @@ plot_data <- function(x, title = "") {
     coord_equal() +
     ggtitle(title) +
     theme_void() +
-    theme(plot.title = element_text(family = "Fira Mono", hjust = 0.5, size = 24)) +
+    theme(plot.title = element_text(family = "Fira Mono", hjust = 0.5, size = title_size)) +
     guides(fill = FALSE)
 }
 
